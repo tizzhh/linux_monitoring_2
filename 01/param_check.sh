@@ -9,7 +9,7 @@ validate_parameter () {
     fi
 
     local param1=$1
-    if [[ ! "$1" = /* ]]
+    if [[ ! "$1" = /* || ! "$1" = */ ]]
     then
         echo "Param1 should be an absolute path"
         exit 2

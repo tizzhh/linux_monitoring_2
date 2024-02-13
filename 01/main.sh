@@ -4,6 +4,8 @@ source param_check.sh
 
 validate_parameter "$@"
 
+GB_IN_KB=1048576
+
 path=$1
 num_subfolders=$2
 folder_chars=$3
@@ -14,17 +16,27 @@ file_size_kb=$6
 file_name_chars=$(echo "$file_chars" | cut -d'.' -f1)
 file_ext_chars=$(echo "$file_chars" | cut -d'.' -f2)
 
-# get_random_str() {
 
-# }
+check_free_space() {
+    free_space=$(df / | awk '{print $4}' | tail -n 1)
+    if [ "$free_space" -lt "$GB_IN_KB" ]
+    then
+        echo "Less than 1 GB free on root"
+        exit 0
+    fi
+}
 
-normalize_file_name_chars () {
-    length=${#file_name_chars}
-    while [ $length -lt 4 ]
+normalize_file_name_chars_folder_chars () {
+    local -n var
+    for var in file_name_chars folder_chars
     do
-        last_char=${file_name_chars: -1}
-        file_name_chars="$file_name_chars$last_char"
-        length=${#file_name_chars}
+        length=${#var}
+        while [ $length -lt 4 ]
+        do
+            last_char=${var: -1}
+            var="$var$last_char"
+            length=${#var}
+        done
     done
 }
 
@@ -49,11 +61,34 @@ generate_name() {
 
 
 main() {
-    normalize_file_name_chars
-    filenamepart="$(generate_name "$file_name_chars" "${#file_name_chars}" 3)_$(date +"%d%m%y")"
-    fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
-    file_name="$filenamepart.$fileextpart"
-    echo "$file_name"
+    normalize_file_name_chars_folder_chars
+
+    dir_paths=($path)
+    while true
+    do
+        temp_outer=("${dir_paths[@]}")
+        dir_paths=()
+        for path_inner in ${temp_outer[@]}
+        do
+            temp=()
+            for (( j=0; j < $num_subfolders; ++j ))
+            do
+                subfolder="$(generate_name "$folder_chars" "${#folder_chars}" 3)_$(date +"%d%m%y")"
+                temp+=("$path_inner$subfolder/")
+                filenamepart="$(generate_name "$file_name_chars" "${#file_name_chars}" 3)_$(date +"%d%m%y")"
+                fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
+                file_name="$filenamepart.$fileextpart"
+                for (( k=0; k < $num_files; ++k ))
+                do
+                    truncate -s $file_size_kb"k" "$path_inner$subfolder/$file_name"
+                done
+                check_free_space
+            done
+            temp_outer=("${temp[@]}")
+            dir_paths+=("${temp_outer[@]}")
+        done
+    done
+    
     exit 0
 }
 
