@@ -74,13 +74,17 @@ main() {
             for (( j=0; j < $num_subfolders; ++j ))
             do
                 subfolder="$(generate_name "$folder_chars" "${#folder_chars}" 3)_$(date +"%d%m%y")"
-                temp+=("$path_inner$subfolder/")
-                filenamepart="$(generate_name "$file_name_chars" "${#file_name_chars}" 3)_$(date +"%d%m%y")"
-                fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
-                file_name="$filenamepart.$fileextpart"
+                new_dir_path="$path_inner$subfolder/"
+                mkdir -p "$new_dir_path"
+                temp+=("$new_dir_path")
                 for (( k=0; k < $num_files; ++k ))
                 do
-                    truncate -s $file_size_kb"k" "$path_inner$subfolder/$file_name"
+                    filenamepart="$(generate_name "$file_name_chars" "${#file_name_chars}" 3)_$(date +"%d%m%y")"
+                    fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
+                    file_name="$filenamepart.$fileextpart"
+                    file_path="$path_inner$subfolder/$file_name"
+                    truncate -s $file_size_kb"k" "$file_path"
+                    echo "$file_path $(date) $file_size_kb KB" >> script_log.txt
                 done
                 check_free_space
             done
