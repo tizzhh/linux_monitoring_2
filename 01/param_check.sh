@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function validate_parameter {
+validate_parameter () {
     local len=$#
     if [ $len -ne 6 ]
     then
