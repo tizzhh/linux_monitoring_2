@@ -44,7 +44,7 @@ delete_by_log_file() {
     do
         file_path=$(echo "$line" | sed 's/ / /' | awk '{print $1}')
         file_path=$(dirname "$file_path")
-        sudo rm -rf $file_path
+        rm -rf $file_path
     done < "$log_file_path"
 }
 
@@ -53,12 +53,12 @@ delete_by_date() {
     read -p "Input end date in UTC: " end_date
     validate_date "$start_date"
     validate_date "$end_date"
-    sudo find / -type d -newermt "$start_date" -not -newermt "$end_date" -exec rm -rv {} +
+    find / -type d -newermt "$start_date" -not -newermt "$end_date" -exec rm -rv {} +
 }
 
 delete_by_mask() {
     read -p "Input mask (chars, underscore and date): " delete_pattern_mask
-    res=$(sudo find / -name "$delete_pattern_mask") &> /dev/null
+    res=$(find / -name "$delete_pattern_mask") &> /dev/null
     for path in ${res[*]}
     do
         rm -rf $path
