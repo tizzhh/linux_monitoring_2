@@ -82,7 +82,8 @@ main() {
     normalize_file_name_chars_folder_chars
 
     dir_paths=(${root_paths[@]})
-    while true
+    # while true
+    for (( i=0; i < 1; ++i ))
     do
         temp_outer=("${dir_paths[@]}")
         dir_paths=()
@@ -93,7 +94,10 @@ main() {
             do
                 subfolder="$(generate_name "$folder_chars" "${#folder_chars}" 3)_$(date +"%d%m%y")"
                 new_dir_path="$path_inner$subfolder/"
-                sudo mkdir -p "$new_dir_path"
+                if ! sudo mkdir -p "$new_dir_path" &> /dev/null
+                then
+                    break
+                fi
                 temp+=("$new_dir_path")
                 for (( k=0; k < $num_files; ++k ))
                 do
@@ -101,7 +105,10 @@ main() {
                     fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
                     file_name="$filenamepart.$fileextpart"
                     file_path="$path_inner$subfolder/$file_name"
-                    fallocate -l $file_size_mb"M" "$file_path"
+                    if ! sudo fallocate -l $file_size_mb"M" "$file_path" &> /dev/null
+                    then
+                        break
+                    fi
                     echo "$file_path $(date) $file_size_mb MB" >> script_log.txt
                 done
                 check_free_space
