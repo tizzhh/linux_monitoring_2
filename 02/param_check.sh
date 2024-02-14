@@ -31,7 +31,7 @@ validate_parameter () {
     fi
 
     local param3=$3
-    if [[ ! "$param3" =~ ^[1-9][0-9]+mb$  ]]
+    if [[ ! "$param3" =~ ^[1-9][0-9]?[0]?mb$  ]]
     then
         echo "Param3 should be <= 100 and >= 1 and mb"
         exit 2 

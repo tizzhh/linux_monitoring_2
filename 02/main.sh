@@ -8,7 +8,7 @@ GB_IN_KB=1048576
 
 folder_chars=$1
 file_chars=$2
-file_size_mb=$3
+file_size_mb=${3::-2}
 
 num_subfolders=100
 num_files=100
@@ -77,7 +77,6 @@ get_root_paths() {
 }
 
 get_root_paths
-echo ${root_paths[*]}
 
 main() {
     normalize_file_name_chars_folder_chars

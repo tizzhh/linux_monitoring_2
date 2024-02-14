@@ -52,7 +52,7 @@ validate_parameter () {
     fi
 
     local param6=$6
-    if [[ ! "$param6" =~ ^[1-9][0-9]+kb$  ]]
+    if [[ ! "$param3" =~ ^[1-9][0-9]?[0]?kb$  ]]
     then
         echo "Param6 should be <= 100 and >= 1"
         exit 2 
