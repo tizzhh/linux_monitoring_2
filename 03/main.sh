@@ -53,7 +53,16 @@ delete_by_date() {
     read -p "Input end date in UTC: " end_date
     validate_date "$start_date"
     validate_date "$end_date"
-    sudo find / -type d -newermt "$start_date" -not -newermt "$end_date" -delete
+    sudo find / -type d -newermt "$start_date" -not -newermt "$end_date" -exec rm -rv {} +
+}
+
+delete_by_mask() {
+    read -p "Input mask (chars, underscore and date): " delete_pattern_mask
+    res=$(sudo find / -name "$delete_pattern_mask") &> /dev/null
+    for path in ${res[*]}
+    do
+        rm -rf $path
+    done
 }
 
 if [[ $arg -eq 1 ]]
@@ -62,4 +71,7 @@ then
 elif [[ $arg -eq 2 ]]
 then
     delete_by_date
+elif [[ $arg -eq 3 ]]
+then
+    delete_by_mask
 fi
