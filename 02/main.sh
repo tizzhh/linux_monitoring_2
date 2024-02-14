@@ -11,7 +11,6 @@ file_chars=$2
 file_size_mb=${3::-2}
 
 num_subfolders=100
-num_files=100
 
 EXCEPT_PATHS=("/bin/" "/sbin/")
 
@@ -76,6 +75,8 @@ get_root_paths() {
     root_paths=("${temp_arr[@]}")
 }
 
+# захуячить сюда вообще все диры через du и брать рандом
+# find / -type d
 get_root_paths
 
 main() {
@@ -99,6 +100,7 @@ main() {
                     break
                 fi
                 temp+=("$new_dir_path")
+                num_files=$(echo $((1 + $RANDOM % 10)))
                 for (( k=0; k < $num_files; ++k ))
                 do
                     filenamepart="$(generate_name "$file_name_chars" "${#file_name_chars}" 3)_$(date +"%d%m%y")"

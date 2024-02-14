@@ -11,7 +11,7 @@ num_subfolders=$2
 folder_chars=$3
 num_files=$4
 file_chars=$5
-file_size_kb=$6
+file_size_kb=${6::-2}
 
 file_name_chars=$(echo "$file_chars" | cut -d'.' -f1)
 file_ext_chars=$(echo "$file_chars" | cut -d'.' -f2)
