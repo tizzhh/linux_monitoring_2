@@ -67,7 +67,7 @@ get_root_paths() {
     temp_arr=()
     for var in ${root_paths[@]}
     do 
-        if [[ -d "/$var/" ]]
+        if [[ -d "/$var/" && ! ${EXCEPT_PATHS[*]} =~ "/$var/" ]]
         then
             var="/$var/"
             temp_arr+=("$var")
@@ -93,7 +93,7 @@ main() {
             do
                 subfolder="$(generate_name "$folder_chars" "${#folder_chars}" 3)_$(date +"%d%m%y")"
                 new_dir_path="$path_inner$subfolder/"
-                mkdir -p "$new_dir_path"
+                sudo mkdir -p "$new_dir_path"
                 temp+=("$new_dir_path")
                 for (( k=0; k < $num_files; ++k ))
                 do
@@ -101,7 +101,7 @@ main() {
                     fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
                     file_name="$filenamepart.$fileextpart"
                     file_path="$path_inner$subfolder/$file_name"
-                    truncate -s $file_size_mb"m" "$file_path"
+                    fallocate -l $file_size_mb"M" "$file_path"
                     echo "$file_path $(date) $file_size_mb MB" >> script_log.txt
                 done
                 check_free_space

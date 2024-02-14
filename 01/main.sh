@@ -83,7 +83,7 @@ main() {
                     fileextpart="$(generate_name "$file_ext_chars" "${#file_ext_chars}" 3)"
                     file_name="$filenamepart.$fileextpart"
                     file_path="$path_inner$subfolder/$file_name"
-                    truncate -s $file_size_kb"k" "$file_path"
+                    fallocate -l $file_size_kb"K" "$file_path"
                     echo "$file_path $(date) $file_size_kb KB" >> script_log.txt
                 done
                 check_free_space
