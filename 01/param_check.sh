@@ -40,7 +40,7 @@ validate_parameter () {
     local param4=$4
     if [[ "$param4" =~ [^1-9]$ ]]
     then
-        echo "Param4 should be english chars only"
+        echo "Param4 should an int"
         exit 2
     fi
 
@@ -52,7 +52,7 @@ validate_parameter () {
     fi
 
     local param6=$6
-    if [[ $param6 -gt 100 || $param6 -lt 1 ]]
+    if [[ ! "$param6" =~ ^[1-9][0-9]+kb$  ]]
     then
         echo "Param6 should be <= 100 and >= 1"
         exit 2 
