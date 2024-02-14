@@ -4,7 +4,7 @@ validate_parameter () {
     local len=$#
     if [ $len -ne 6 ]
     then
-        echo "Usage: [absolute_path] [number of subfolders] [7 english chars for folder names] [number of each file in folder] [<= 7 english chars for file name <= for ext] [file size in kb <= 100kb]"
+        echo "Usage: [absolute_path] [number of subfolders] [7 english chars for folder names] [number of each file in folder] [<= 7 english chars for file name <= 3 for ext] [file size in kb <= 100kb]"
         exit 2
     fi
 

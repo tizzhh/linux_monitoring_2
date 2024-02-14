@@ -48,13 +48,18 @@ delete_by_log_file() {
     done < "$log_file_path"
 }
 
+delete_by_date() {
+    read -p "Input start date in UTC: " start_date
+    read -p "Input end date in UTC: " end_date
+    validate_date "$start_date"
+    validate_date "$end_date"
+    sudo find / -type d -newermt "$start_date" -not -newermt "$end_date" -delete
+}
+
 if [[ $arg -eq 1 ]]
 then
     delete_by_log_file
 elif [[ $arg -eq 2 ]]
 then
-    read -p "Input start date: " start_date
-    read -p "Input end date: " end_date
-    validate_date "$start_date"
-    validate_date "$end_date"
+    delete_by_date
 fi

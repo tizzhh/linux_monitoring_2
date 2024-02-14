@@ -4,7 +4,7 @@ validate_parameter () {
     local len=$#
     if [ $len -ne 3 ]
     then
-        echo "Usage: [7 english chars for folder names] [<= 7 english chars for file name <= for ext] [file size in mb <= 100mb]"
+        echo "Usage: [7 english chars for folder names] [<= 7 english chars for file name <= 3 for ext] [file size in mb <= 100mb]"
         exit 2
     fi
 
