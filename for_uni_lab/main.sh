@@ -2,7 +2,6 @@
 
 MEMORY_LEFT_IN_KB=100
 file_size_mb=5
-num_subfolders=5
 
 check_free_space() {
     free_space=$(df / | awk '{print $4}' | tail -n 1)
@@ -31,6 +30,7 @@ main() {
         random_path="${root_paths[$random_index]}"
 
         temp=()
+        num_subfolders=$(echo $((3 + $RANDOM % 10)))
         for (( j=0; j < $num_subfolders; ++j ))
         do
             subfolder=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
